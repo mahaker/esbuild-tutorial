@@ -1,0 +1,17 @@
+{
+  "name": "esbuild-tutorial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "build": "./node_modules/.bin/esbuild ./src/index.ts --bundle --outfile=dist/bundle.js"
+  },
+  "keywords": [],
+  "author": "Hideaki Matsunami <carbon0409@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.10.2",
+    "typescript": "^4.2.3"
+  }
+}
