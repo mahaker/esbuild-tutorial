@@ -6,6 +6,8 @@
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "node scripts/build.js",
+    "prestart": "npm run build && clear",
+    "start": "node dist/bundle.js",
     "test": "jest"
   },
   "keywords": [],
