@@ -3,6 +3,7 @@ require('esbuild').build({
   bundle: true,
   outfile: 'dist/bundle.js',
   logLevel: 'info',
+  minify: true,
   banner: {
     js: '// This is js banner.',
   },
