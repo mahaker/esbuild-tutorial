@@ -1,4 +1,4 @@
-import { add } from './utils'
+import Utils from './utils'
 
 const greet = (name: string): void => {
   console.log(`Hello ${name}!`)
@@ -7,8 +7,8 @@ const greet = (name: string): void => {
 const main = () => {
   greet('mahaker')
   
-  const r = add(2, 3)
-  console.log(r)
+  console.log(Utils.add(2, 3))
+  console.log(Utils.sub(0, 5))
 }
 
 main()
