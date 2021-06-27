@@ -18,7 +18,6 @@ const main2 = () => {
   console.log(Utils.sub(10, 5))
 }
 
-// @ts-ignore
+declare let global: any
 global.main1 = main1
-// @ts-ignore
 global.main2 = main2

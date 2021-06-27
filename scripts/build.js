@@ -1,3 +1,5 @@
+const { GasPlugin } = require('esbuild-gas-plugin')
+
 const MyPlugin = {
   name: 'my-plugin',
   setup(build) {
@@ -43,5 +45,5 @@ require('esbuild').build({
     js: '// This is js footer.',
   },
   target: ['node14.15.5'],
-  plugins: [MyPlugin]
+  plugins: [GasPlugin]
 }).catch(() => process.exit(1))
