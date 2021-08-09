@@ -25,9 +25,20 @@ const MyPlugin = {
     build.onEnd(result => {
       console.log('build finished!')
       console.info(result)
+      if(result.errors.length || result.warnings.length) return
 
       const outfile = fs.readFileSync(build.initialOptions.outfile)
       console.info(outfile.toString())
+    })
+  }
+}
+
+class MyClassPlugin {
+  name = 'my-class-plugin'
+  setup(build) {
+    build.onEnd(result => {
+      console.info('build finished!!')
+      console.info(result)
     })
   }
 }
@@ -37,13 +48,11 @@ require('esbuild').build({
   bundle: true,
   outfile: 'dist/bundle.js',
   logLevel: 'info',
-  define: { global: 'global' },
   banner: {
     js: '// This is js banner.',
   },
   footer: {
     js: '// This is js footer.',
   },
-  target: ['node14.15.5'],
-  plugins: [GasPlugin]
+  plugins: [GasPlugin, MyPlugin, new MyClassPlugin()]
 }).catch(() => process.exit(1))
