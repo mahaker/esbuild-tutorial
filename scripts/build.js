@@ -43,6 +43,17 @@ class MyClassPlugin {
   }
 }
 
+const MyPluginFromFunction = (hoge) => ({
+  name: 'my-plugin-from-function',
+  setup(build) {
+    build.onEnd(result => {
+      console.info('build finished!!!')
+      console.info(result)
+      console.info(hoge)
+    })
+  }
+})
+
 require('esbuild').build({
   entryPoints: ['src/index.ts'],
   bundle: true,
@@ -54,5 +65,5 @@ require('esbuild').build({
   footer: {
     js: '// This is js footer.',
   },
-  plugins: [GasPlugin, MyPlugin, new MyClassPlugin()]
+  plugins: [GasPlugin, MyPlugin, new MyClassPlugin(), MyPluginFromFunction('mahaker')]
 }).catch(() => process.exit(1))
