@@ -65,5 +65,5 @@ require('esbuild').build({
   footer: {
     js: '// This is js footer.',
   },
-  plugins: [GasPlugin, MyPlugin, new MyClassPlugin(), MyPluginFromFunction('mahaker')]
+  plugins: [GasPlugin]
 }).catch(() => process.exit(1))
