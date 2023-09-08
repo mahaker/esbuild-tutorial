@@ -1,58 +1,46 @@
+const readline = require('node:readline/promises')
+const { Readable } = require('node:stream')
 const { GasPlugin } = require('esbuild-gas-plugin')
 
+async function countLines(s) {
+  return new Promise(resolve => {
+    let count = 0
+    const input = Readable.from([s])
+    const rl = readline.createInterface({input})
+
+    rl.on('line', () => {
+      count++
+    })
+
+    rl.on('close', () => {
+      resolve(count)
+    })
+  })
+}
+
+// TODO support node16
+// TODO bannerの行数を数えて、ファイルの先頭からn行消す
+// TODO GASの関数定義を作成
+// TODO その後、ファイルの先頭にbannerを記載する
+// TODO test
+// TODO drop node14
 const MyPlugin = {
-  name: 'my-plugin',
+  name: 'MyPlugin',
   setup(build) {
-    const fs = require('fs')
+    let bannerLines = 0
+    build.onStart(async () => {
+      console.log('build start!')
+      const jsBanner = build.initialOptions?.banner?.js
+      if (jsBanner === undefined) return
 
-    console.log(build)
-    build.onResolve({ filter: /\.ts$/ }, args => {
-      console.log('--- onResolve start ---')
-      console.info(args)
-      console.log('--- onResolve finish ---')
+      bannerLines = await countLines(jsBanner)
     })
 
-    build.onLoad({ filter: /\.ts$/ }, async (args) => {
-      console.log('--- onLoad start ---')
-      console.info(args)
-      console.log('--- onLoad finish ---')
-    })
-
-    build.onStart(() => {
-      console.log('build started')
-    })
-
-    build.onEnd(result => {
-      console.log('build finished!')
-      console.info(result)
-      if(result.errors.length || result.warnings.length) return
-
-      const outfile = fs.readFileSync(build.initialOptions.outfile)
-      console.info(outfile.toString())
+    build.onEnd(() => {
+      console.log('build finished', bannerLines)
     })
   }
 }
-
-class MyClassPlugin {
-  name = 'my-class-plugin'
-  setup(build) {
-    build.onEnd(result => {
-      console.info('build finished!!')
-      console.info(result)
-    })
-  }
-}
-
-const MyPluginFromFunction = (hoge) => ({
-  name: 'my-plugin-from-function',
-  setup(build) {
-    build.onEnd(result => {
-      console.info('build finished!!!')
-      console.info(result)
-      console.info(hoge)
-    })
-  }
-})
 
 require('esbuild').build({
   entryPoints: ['src/index.ts'],
@@ -60,10 +48,15 @@ require('esbuild').build({
   outfile: 'dist/bundle.js',
   logLevel: 'info',
   banner: {
-    js: '// This is js banner.',
+    js: `/**
+ * This is Banner.
+ * This is Banner.
+ * This is Banner.
+ */
+`,
   },
   footer: {
     js: '// This is js footer.',
   },
-  plugins: [GasPlugin]
+  plugins: [GasPlugin, MyPlugin]
 }).catch(() => process.exit(1))
